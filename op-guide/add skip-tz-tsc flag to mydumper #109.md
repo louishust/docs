@@ -12,4 +12,4 @@ We use `-B test` to indicate that these operations go to the database `test` and
 +
  > Note: In some clouds that need `super privilege`, such as Aliyun, `mydumper` needs to be added with the parameter `--no-locks`. Otherwise, you don't have the priviledge to perform this action.
  
-### Export data to TiDB
+### Importing data to TiDB
