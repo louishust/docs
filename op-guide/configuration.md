@@ -12,9 +12,12 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 + Human-readable name for this member.
 + default: "goleveldb"
 + You can choose from "memory", "goleveldb", "BoltDB" or "TiKV". The first three are all local storage engines. TiKV is a distributed storage engine.
++ For example, we can start a pure memory engine TiDB through `tidb-server --store=memory`.
 
 ### --path
-+ the path to the data directory for local storage engines like goleveldb, BoltDB, or memory or the DSN for the distributed storage engine like TiKV. If you use TiKV, specify the path in the following format: $Host:$Port.
++ For local storage engines like goleveldb or BoltDB, the path specifies the actual storage directory of data.
++ For the memory storage engine, there is no need to set the path.
++ For the TiKV storage engine, the path specifies the actual PD address.
 + default: "/tmp/tidb"
 
 ### -L
@@ -25,12 +28,13 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 ### --log-file
 + the log file
 + default: ""
-+ If this flag is not set, logs will be written to stderr. Otherwise, logs will be stored in the log file which will be automatically rotated every day.
++ If this flag is not set, logs will be written to stderr. Otherwise, logs will be stored in the corresponding file. Every day, logs will automatically rotate a new file and then rename and backup the old file.
 
 ### --host
 + the listening address for TiDB server
 + default: "0.0.0.0"
-+ TiDB server will listen on this address.
++ TiDB server will listen on this host.
++ By default, O.O.O.O listens on the address of all network cards. If you have more than one network card, you can specify the network card that provides services.
 
 ### -P
 + the listening port for TiDB server
@@ -50,9 +54,9 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 + This is the schema lease time that is used in online schema changes. The value will affect the DDL statement running time. Do not change it unless you understand the internal mechanism.
 
 ### --socket
-+ the socket file for connection
++ TiDB server uses unix socket file for connection.
 + default: ""
-+ You can use the "/tmp/tidb.sock" file.
++ You can use the "/tmp/tidb.sock" to open unix socket file.
 
 ### --perfschema
 + enable(true) or disable(false) the performance schema
