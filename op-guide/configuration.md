@@ -34,7 +34,7 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 + the listening address for TiDB server
 + default: "0.0.0.0"
 + TiDB server will listen on this host.
-+ By default, O.O.O.O listens on the address of all network cards. If you have more than one network card, you can specify the network card that provides services.
++ By default, O.O.O.O listens on the address of all network cards. If you have more than one network card, you can specify the network card that provides services from outside.
 
 ### -P
 + the listening port for TiDB server
@@ -61,7 +61,7 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 ### --perfschema
 + enable(true) or disable(false) the performance schema
 + default: false
-+ The value can be (true) or (false). (true) is to enable and (false) is to disable. The Performance Schema provides a way to inspect internal execution of the server at runtime. See [performance schema](http://dev.mysql.com/doc/refman/5.7/en/performance-schema.html) for more information. If you enable the performance schema, the performance will be affected.
++ The value can be (true) or (false). (true) is to enable and (false) is to disable. The Performance Schema provides a way to inspect internal execution of the server at runtime. See [performance schema](http://dev.mysql.com/doc/refman/5.7/en/performance-schema.html) for more information. If you enable the Performance Schema, the performance will be affected.
 
 ### --privilege
 + enable(true) or disable(false) the privilege check.
@@ -74,19 +74,14 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 + The value can be (true) or (false). (true) is to enable metrics and pprof. (false) is to disable metrics and pprof.
 
 ### --metrics-addr
-+ the Prometheus pushgateway address
++ the Prometheus Push Gateway address
 + default: ""
 + Leaving it empty stops the Prometheus client from pushing.
 
 ### --metrics-intervel
-+ the Prometheus client push interval in seconds
-+ default: 0
++ the time interval of pushing metrics to Prometheus Push Gateway
++ default: 15s
 + Setting the value to 0 stops the Prometheus client from pushing.
-
-### --cross-join
-+ enable(true) or disable(false) the cross join without any equal condition
-+ default: true
-+ The value can be (true) or (false). (true) is to enable join without any equal conditions. (false) is to disable it.
 
 ## Placement Driver (PD)
 
@@ -99,7 +94,7 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 ### --log-file
 + the log file
 + default: ""
-+ If this flag is not set, logs will be written to stderr. Otherwise, logs will be stored in the log file which will be automatically rotated every day.
++ If this flag is not set, logs will be written to stderr. Otherwise, logs will be stored in the corresponding file. Every day, logs will automatically rotate a new file and then rename and backup the old file.
 
 ### --config
 
@@ -111,7 +106,7 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 
 + the human-readable unique name for this PD member
 + default: "pd"
-+ If you want to start multiply PDs, you must use different name for each one.
++ If you want to start multiple PDs, you must use different names for each one.
 
 ### --data-dir
 
@@ -144,13 +139,13 @@ The default TiDB ports are 4000 for client requests and 10080 for status report.
 
 + the initial cluster configuration for bootstrapping
 + default: "{name}=http://{advertise-peer-url}"
-+ For example, if `name` is "pd", and `advertise-peer-urls` is "http://127.0.0.1:2380,http://127.0.0.1:2381", the `initial-cluster` is "pd=http://127.0.0.1:2380,pd=http://127.0.0.1:2381".
++ For example, if `name` is "pd", and `advertise-peer-urls` is "http://192.168.100.113:2380", the `initial-cluster` is "pd=http://192.168.100.113:2380".
 
 ### --join
 
 + join the cluster dynamically
 + default: ""
-+ If you want to join an existing cluster, you can use `--join="${advertise-client-urls}"`, the `advertise-client-url` is any existing PD's, multiply advertise client urls are separated by comma.
++ If you want to dynamically add a PD to an existing cluster, you can use `--join="${advertise-client-urls}"`, the `advertise-client-url` is any existing PD's, multiple advertise client urls are separated by comma.
 
 ## TiKV
 
@@ -168,7 +163,7 @@ TiKV supports some human readable conversion.
 
 + the server advertise address for client traffic.
 + default: ${addr}
-+ + If the client cannot connect to TiKV through the default listening address, you must manually set the advertise address explicitly.
++ If the client cannot connect to TiKV through the default listening address, you must manually set the advertise address explicitly.
 
 ### -L, --Log
 
@@ -179,7 +174,7 @@ TiKV supports some human readable conversion.
 ### --log-file
 + the log file
 + default: ""
-+ If this flag is not set, logs will be written to stderr. Otherwise, logs will be stored in the log file which will be automatically rotated every day.
++ If this flag is not set, logs will be written to stderr. Otherwise, logs will be stored in the corresponding file. Every day, logs will automatically rotate a new file and then rename and backup the old file.
 
 ### -C, --config
 
@@ -198,14 +193,8 @@ TiKV supports some human readable conversion.
 + default: 0 (unlimited)
 + PD uses this flag to determine how to balance the TiKV servers. (Tip: you can use 10GB instead of 1073741824)
 
-### -S, --dsn
-
-+ the DSN to use
-+ default: "raftkv"
-+ The flag is deprecated now. 
-
 ### --pd
 
-+ the pd endpoints
++ the pd address lists
 + default: ""
-+ You must set this flag to let TiKV connect to PD. Multiple endpoints are separated by comma, for example, "pd1:2379,pd2:2379".
++ You must set this flag to let TiKV connect to PD. Multiple address lists are separated by comma, for example, "192.168.100.113:2379, 192.168.100.114:2379, 192.168.100.115:2379".
